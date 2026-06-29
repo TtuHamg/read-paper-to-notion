@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Paper to Notion"
+  short_description: "中文精读论文并追加到 Paper"
+  default_prompt: "Use $read-paper-to-notion 用中文分析这篇论文，并将六段精简笔记直接追加到 Notion Paper 页面。"
