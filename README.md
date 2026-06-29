@@ -148,7 +148,3 @@ Codex 会：
 - 快速判断一篇论文值不值得细读。
 - 为论文阅读记录生成统一格式。
 - 把 embodied AI、robot learning、VLA/WAM 等方向论文归档到 Notion。
-
-## License
-
-未指定。发布到公开仓库前建议添加合适的开源许可证，例如 MIT。
