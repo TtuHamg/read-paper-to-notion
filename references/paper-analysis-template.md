@@ -38,6 +38,19 @@ Notion 正文必须按此格式组织：
 
 不要把六个 section 写成 `##` heading；它们必须是加粗文本标签。
 
+## 详细阅读 / 问答时的概念解释
+
+当用户要求详细阅读、深度解读、解释某个问题，或明显是小白视角时，用户可见回答应额外解释抽象概念，但 Notion 精简笔记仍默认保持上面的标题加六段结构。
+
+概念解释应遵守：
+
+- 先解释读懂回答所必需的概念，再进入结论。
+- 每个概念用 2-5 句话讲清楚：它是什么、为什么需要它、在本文里承担什么作用。
+- 优先解释论文里的关键术语，例如 pretraining/post-training、World-Action Model、VLA、validation action loss、OOD generalization、ablation、benchmark、baseline、scaling law 等。
+- 不要只给教科书定义；要把概念和这篇论文的具体实验或结论连起来。
+- 对推断性解释标注 "我的理解是" 或 "可以这样理解"，避免伪装成论文原文。
+- 只有用户明确要求把详细解释写入 Notion 时，才把概念解释加入 Notion；否则 Notion 只写六段精简笔记。
+
 ## TL;DR
 
 用 3-5 句话说明：论文解决的问题、核心方法、最关键实验结果、主要结论或主要 caveat。
