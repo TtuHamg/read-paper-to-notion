@@ -1,6 +1,6 @@
 # Read Paper to Notion
 
-一个用于快速精读论文并写入 Notion 的 Codex skill。它会读取本地 PDF、arXiv/DOI URL 或论文引用，用中文提炼论文核心内容，并把精简笔记直接追加到指定的 Notion `Paper` 页面。
+一个用于快速精读论文、归档论文笔记、或进行论文问答的 Codex skill。它会读取本地 PDF、arXiv/DOI URL 或论文引用，用中文提炼论文核心内容；归档模式会把精简笔记直接追加到指定的 Notion `Paper` 页面，详细问答模式默认只在聊天中回答。
 
 ## 功能概览
 
@@ -20,7 +20,7 @@
 - 保留论文标题、模型名、benchmark、数据集名、指标名等英文术语，避免翻译损失精度。
 - 不写入作者列表、会议年份、来源链接、本地路径、PDF 上传状态等元信息。
 - 直接追加到目标 Notion `Paper` 页面本身，不创建子页面或数据库条目。
-- 如果用户要求详细阅读、深度解读或回答具体问题，会在用户可见回答中解释抽象概念，帮助小白理解论文。
+- 如果用户要求详细阅读、深度解读或回答具体问题，会只在聊天回答中解释抽象概念，帮助小白理解论文；默认不写入 Notion。
 
 ## 目录结构
 
@@ -114,7 +114,7 @@ $read-paper-to-notion 详细解释这篇论文里的 World-Action Model 和 OOD 
 $read-paper-to-notion 这篇论文为什么说 egocentric video 比 real-robot data 更适合 pretraining？请把关键概念解释清楚。
 ```
 
-在这种模式下，Codex 会先解释必要概念，例如 pretraining/post-training、World-Action Model、validation action loss、OOD generalization、benchmark、baseline、ablation 或 scaling law，再回答问题。默认情况下，Notion 里仍只追加六段精简笔记；只有你明确要求，才会把详细解释也写入 Notion。
+在这种模式下，Codex 会先解释必要概念，例如 pretraining/post-training、World-Action Model、validation action loss、OOD generalization、benchmark、baseline、ablation 或 scaling law，再回答问题。默认情况下，这类详细问答不会写入 Notion；只有你明确要求“写入 Notion / 归档 / 保存”，才会执行 Notion 写入。
 
 ## 输出示例
 

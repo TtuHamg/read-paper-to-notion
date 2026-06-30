@@ -40,7 +40,7 @@ Notion 正文必须按此格式组织：
 
 ## 详细阅读 / 问答时的概念解释
 
-当用户要求详细阅读、深度解读、解释某个问题，或明显是小白视角时，用户可见回答应额外解释抽象概念，但 Notion 精简笔记仍默认保持上面的标题加六段结构。
+当用户要求详细阅读、深度解读、解释某个问题，或明显是小白视角时，只在用户可见回答中解释抽象概念；默认不要写入 Notion。只有用户明确要求保存、归档、写入或追加到 Notion 时，才使用上面的标题加六段结构写入 Notion。
 
 概念解释应遵守：
 
@@ -49,7 +49,7 @@ Notion 正文必须按此格式组织：
 - 优先解释论文里的关键术语，例如 pretraining/post-training、World-Action Model、VLA、validation action loss、OOD generalization、ablation、benchmark、baseline、scaling law 等。
 - 不要只给教科书定义；要把概念和这篇论文的具体实验或结论连起来。
 - 对推断性解释标注 "我的理解是" 或 "可以这样理解"，避免伪装成论文原文。
-- 只有用户明确要求把详细解释写入 Notion 时，才把概念解释加入 Notion；否则 Notion 只写六段精简笔记。
+- 详细阅读 / 问答模式默认不写 Notion，也不追加六段精简笔记。只有用户明确要求写入 Notion 时，才执行 Notion 写入；即便写入，默认仍只写标题加六段精简笔记。
 
 ## TL;DR
 

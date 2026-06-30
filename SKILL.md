@@ -1,17 +1,17 @@
 ---
 name: read-paper-to-notion
-description: Analyze academic papers from PDFs, arXiv/DOI URLs, local files, or citations, extract only the TL;DR, motivation, method innovations, experimental benchmarks, compared baselines, and experimental conclusions, then append that concise Chinese reading note directly into the user's Notion Paper page without creating a child page or database item. Always answer the user in Simplified Chinese and write the Notion note in Simplified Chinese, while preserving paper titles, model names, dataset names, metrics, and official terminology in their original language when clearer. Use when the user asks to read, understand, summarize, dissect, compare, archive, deeply read, explain, or answer questions about a research paper; in detailed reading or Q&A mode, explain abstract or difficult concepts in beginner-friendly language.
+description: Analyze academic papers from PDFs, arXiv/DOI URLs, local files, or citations. In archive/save/write-to-Notion mode, extract only the TL;DR, motivation, method innovations, experimental benchmarks, compared baselines, and experimental conclusions, then append that concise Chinese reading note directly into the user's Notion Paper page without creating a child page or database item. In detailed reading or Q&A mode, answer only in chat and do not write to Notion unless the user explicitly asks to save that answer. Always answer the user in Simplified Chinese and write any requested Notion note in Simplified Chinese, while preserving paper titles, model names, dataset names, metrics, and official terminology in their original language when clearer. Use when the user asks to read, understand, summarize, dissect, compare, archive, deeply read, explain, or answer questions about a research paper.
 ---
 
 # Read Paper to Notion
 
 ## Overview
 
-Read one research paper deeply enough to explain its core contribution and evidence, then append a compact structured note directly into the user's Notion Paper page.
+Read one research paper deeply enough to explain its core contribution and evidence. Archive mode appends a compact structured note directly into the user's Notion Paper page; detailed reading and Q&A mode answers in chat only by default.
 
 Always answer the user in Simplified Chinese and write the Notion note in Simplified Chinese. Preserve paper titles, model names, dataset names, metrics, benchmark names, and official terms in their original language when translating them would reduce precision. Start the Notion note with the paper title as a second-level heading (`## <paper title>`), then keep the body limited to the six requested bold section labels: **TL;DR**, **论文 motivation**, **方法创新点**, **实验 benchmark**, **比较的 baseline**, **实验结论**.
 
-When the user asks for detailed reading, deeper explanation, or answers to specific questions, make the user-facing answer beginner-friendly by explaining abstract concepts, methods, metrics, and assumptions before using them. Keep the Notion note concise unless the user explicitly asks to store the detailed explanation too.
+When the user asks for detailed reading, deeper explanation, or answers to specific questions, make the user-facing answer beginner-friendly by explaining abstract concepts, methods, metrics, and assumptions before using them. In detailed reading or Q&A mode, do not write anything to Notion unless the user explicitly asks to save, append, archive, or write that answer to Notion.
 
 ## Workflow
 
@@ -27,14 +27,15 @@ When the user asks for detailed reading, deeper explanation, or answers to speci
    - Do not include source metadata, author lists, local paths, upload status, or separate limitation/reading-note sections in the final Notion content unless the user explicitly asks.
    - Include the paper title in the final Notion content as a second-level heading before the six sections.
 
-3. Save the note to Notion using `references/notion-paper-target.md`.
+3. Save the note to Notion using `references/notion-paper-target.md` only when the user asks to archive/save/write a paper note.
    - Prefer the Notion connector/tools over browser automation.
    - Append the note directly to the configured `Paper` page.
    - Do not create a child page, standalone page, or database item unless the user explicitly changes the destination.
    - Do not attach or link the PDF in the Notion note unless the user explicitly asks.
+   - Skip this step entirely for detailed reading or Q&A requests that do not explicitly ask for Notion writing.
 
 4. Report back to the user.
-   - Provide the reading summary in Simplified Chinese and say whether Notion archiving succeeded.
+   - For archive/save/write-to-Notion requests, provide the reading summary in Simplified Chinese and say whether Notion archiving succeeded.
    - If Notion upload is blocked by missing authorization/tooling, provide the completed Chinese note and the exact blocker.
    - For detailed reading or Q&A requests, include short concept explanations in the user-facing answer so a beginner can follow the paper's logic.
 
@@ -57,7 +58,7 @@ Use this mode when the user asks for "详细阅读", "深度解读", "解释一�
 - Use a simple analogy only when it makes the concept clearer; do not replace the paper's actual mechanism with the analogy.
 - Connect every explanation back to the paper's claim or experiment so the answer does not become a generic tutorial.
 - Separate paper-stated facts from your own interpretation with phrases like "论文中直接说明..." and "我的理解是...".
-- Keep detailed explanations in the user-facing answer. Only append them to Notion if the user explicitly asks for detailed notes.
+- Keep detailed explanations in the user-facing answer only. Do not append anything to Notion in this mode unless the user explicitly asks for Notion writing.
 
 ## Resources
 
