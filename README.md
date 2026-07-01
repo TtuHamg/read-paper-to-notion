@@ -19,7 +19,7 @@
 - 始终用简体中文回答和写入 Notion。
 - 保留论文标题、模型名、benchmark、数据集名、指标名等英文术语，避免翻译损失精度。
 - 不写入作者列表、会议年份、来源链接、本地路径、PDF 上传状态等元信息。
-- 直接追加到目标 Notion `Paper` 页面本身，不创建子页面或数据库条目。
+- 通过 Notion 官方 API 和本地 Integration token 直接追加到目标 Notion `Paper` 页面本身，不创建子页面或数据库条目。
 - 如果用户要求详细阅读、深度解读或回答具体问题，会只在聊天回答中解释抽象概念，帮助小白理解论文；默认不写入 Notion。
 
 ## 目录结构
@@ -66,7 +66,7 @@ git clone <your-repo-url> ~/.codex/skills/read-paper-to-notion
 默认写入目标在：
 
 ```text
-https://app.notion.com/p/Paper-37e51a5692e0807a862ed0b6b55f23aa?source=copy_link
+https://app.notion.com/p/Paper-Reading-38f75a34c926807bb1c5c880e5c6a001?source=copy_link
 ```
 
 如果要改成自己的 Notion 页面，编辑：
@@ -77,7 +77,29 @@ references/notion-paper-target.md
 
 把页面 URL 和 page ID 改成你的目标页面。
 
-注意：Notion 的公开编辑权限不等于 API integration 权限。需要在 Notion 页面右上角 `...` -> `Connections` 中添加当前 ChatGPT/OpenAI/Codex 对应的 Notion connection，否则工具可能返回 `object_not_found`。
+这个 skill 推荐使用 Notion 官方 Integration，而不是依赖 Codex 内置 Notion connector。配置步骤：
+
+1. 在 Notion 中进入 `Settings -> Connections -> Develop or manage integrations`。
+2. 创建 internal integration。建议分成 `Codex Notion Read` 和 `Codex Notion Write` 两个 integration。
+3. 给只读 integration 开启 `Read content`；给写入 integration 开启 `Read content`、`Insert content`、`Update content`。
+4. 在目标 Notion 页面右上角 `Share -> Invite / Connections` 中添加对应 integration。
+5. 在本机设置环境变量：
+
+```bash
+export NOTION_TOKEN_READ="your_read_integration_token"
+export NOTION_TOKEN_WRITE="your_write_integration_token"
+```
+
+如果使用 Windows PowerShell：
+
+```powershell
+setx NOTION_TOKEN_READ "your_read_integration_token"
+setx NOTION_TOKEN_WRITE "your_write_integration_token"
+```
+
+设置完成后重启 Codex，使环境变量对 Codex 进程可见。不要把 token 粘贴到聊天窗口，也不要在终端中直接打印 token。
+
+注意：Notion 的公开编辑权限不等于 API integration 权限。即使页面所有人可编辑，如果没有把目标页面显式分享给对应 Integration，Notion API 仍可能返回 `object_not_found` 或 `404`。
 
 ## 使用方式
 
@@ -98,7 +120,7 @@ Codex 会：
 1. 读取论文内容。
 2. 抽取 motivation、方法创新、benchmark、baseline 和实验结论。
 3. 生成中文六段式笔记。
-4. 使用 Notion connector 将笔记直接追加到目标 `Paper` 页面。
+4. 使用 `NOTION_TOKEN_WRITE` 调用 Notion API，将笔记直接追加到目标 `Paper` 页面。
 
 ### 详细阅读 / 问答模式
 
@@ -150,11 +172,11 @@ $read-paper-to-notion 这篇论文为什么说 egocentric video 比 real-robot d
 
 ### Notion 返回 `object_not_found`
 
-通常是 Notion 页面没有授权给当前 integration。请在目标 Notion 页面中添加对应 connection。
+通常是目标 Notion 页面没有显式授权给当前 Integration。请在目标 Notion 页面中通过 `Share -> Invite / Connections` 添加对应 Integration。
 
 ### 只生成了内容，没有写入 Notion
 
-当前会话可能没有暴露 `update_page` 工具。这个 skill 会避免退而创建子页面，并要求用户重新授权或重新加载 Notion connector。
+通常是 `NOTION_TOKEN_WRITE` 不存在、Codex 启动时没有读取到环境变量，或目标页面没有授权给写入 Integration。这个 skill 会避免退而创建子页面。
 
 ### 想写入其他 Notion 页面
 

@@ -1,13 +1,13 @@
 ---
 name: read-paper-to-notion
-description: Analyze academic papers from PDFs, arXiv/DOI URLs, local files, or citations. In archive/save/write-to-Notion mode, extract only the TL;DR, motivation, method innovations, experimental benchmarks, compared baselines, and experimental conclusions, then append that concise Chinese reading note directly into the user's Notion Paper page without creating a child page or database item. In detailed reading or Q&A mode, answer only in chat and do not write to Notion unless the user explicitly asks to save that answer. Always answer the user in Simplified Chinese and write any requested Notion note in Simplified Chinese, while preserving paper titles, model names, dataset names, metrics, and official terminology in their original language when clearer. Use when the user asks to read, understand, summarize, dissect, compare, archive, deeply read, explain, or answer questions about a research paper.
+description: Analyze academic papers from PDFs, arXiv/DOI URLs, local files, or citations. In archive/save/write-to-Notion mode, extract only the TL;DR, motivation, method innovations, experimental benchmarks, compared baselines, and experimental conclusions, then append that concise Chinese reading note directly into the user's Notion Paper page through the official Notion API and local integration token, without creating a child page or database item. In detailed reading or Q&A mode, answer only in chat and do not write to Notion unless the user explicitly asks to save that answer. Always answer the user in Simplified Chinese and write any requested Notion note in Simplified Chinese, while preserving paper titles, model names, dataset names, metrics, and official terminology in their original language when clearer. Use when the user asks to read, understand, summarize, dissect, compare, archive, deeply read, explain, or answer questions about a research paper.
 ---
 
 # Read Paper to Notion
 
 ## Overview
 
-Read one research paper deeply enough to explain its core contribution and evidence. Archive mode appends a compact structured note directly into the user's Notion Paper page; detailed reading and Q&A mode answers in chat only by default.
+Read one research paper deeply enough to explain its core contribution and evidence. Archive mode appends a compact structured note directly into the user's Notion Paper page through the official Notion API and local integration token; detailed reading and Q&A mode answers in chat only by default.
 
 Always answer the user in Simplified Chinese and write the Notion note in Simplified Chinese. Preserve paper titles, model names, dataset names, metrics, benchmark names, and official terms in their original language when translating them would reduce precision. Start the Notion note with the paper title as a second-level heading (`## <paper title>`), then keep the body limited to the six requested bold section labels: **TL;DR**, **论文 motivation**, **方法创新点**, **实验 benchmark**, **比较的 baseline**, **实验结论**.
 
@@ -28,7 +28,9 @@ When the user asks for detailed reading, deeper explanation, or answers to speci
    - Include the paper title in the final Notion content as a second-level heading before the six sections.
 
 3. Save the note to Notion using `references/notion-paper-target.md` only when the user asks to archive/save/write a paper note.
-   - Prefer the Notion connector/tools over browser automation.
+   - Prefer the official Notion API with `NOTION_TOKEN_WRITE` over built-in Notion connectors or browser automation.
+   - Use `NOTION_TOKEN_READ` only for reading or verifying Notion content; use `NOTION_TOKEN_WRITE` only after the user explicitly asks to save, append, archive, or write to Notion.
+   - Never print, echo, log, or paste Notion tokens into the conversation.
    - Append the note directly to the configured `Paper` page.
    - Do not create a child page, standalone page, or database item unless the user explicitly changes the destination.
    - Do not attach or link the PDF in the Notion note unless the user explicitly asks.

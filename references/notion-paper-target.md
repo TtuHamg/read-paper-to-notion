@@ -2,17 +2,49 @@
 
 将完成后的中文论文阅读笔记直接追加到用户的 Notion Paper 页面：
 
-https://app.notion.com/p/Paper-37e51a5692e0807a862ed0b6b55f23aa?source=copy_link
+https://app.notion.com/p/Paper-Reading-38f75a34c926807bb1c5c880e5c6a001?source=copy_link
 
-页面 ID：`37e51a56-92e0-807a-862e-d0b6b55f23aa`
+页面 ID：`38f75a34-c926-807b-b1c5-c880e5c6a001`
 
 ## 写入策略
 
-1. 使用可用的 Notion connector/tools。若当前没有暴露工具，先搜索 Notion 工具。
-2. 目标是普通 Notion 页面 `Paper`，不是数据库目标。
-3. 直接向该页面追加内容。优先使用 `update_page` 的 `insert_content` / append 能力。
-4. 不要创建子页面、standalone page、database item 或 database row，除非用户明确改口要求。
-5. 如果当前只暴露 `create_pages` 而没有 `update_page`，不要退而创建子页面；应告知用户当前工具不足以按要求直接写入目标页面，并提供待写入的中文内容。
+1. 优先使用 Notion 官方 API 和本地环境变量，不依赖 Codex 内置 Notion connector 的工作区绑定。
+2. 默认读取 Notion 内容时使用 `NOTION_TOKEN_READ`；只有用户明确要求写入、追加、保存或归档时，才使用 `NOTION_TOKEN_WRITE`。
+3. 写入前只检查 token 是否存在，不要打印 token 内容，不要把 token 粘贴到聊天窗口或命令输出里。
+4. 目标是普通 Notion 页面 `Paper`，不是数据库目标。
+5. 直接向该页面追加 block，API endpoint 为 `PATCH https://api.notion.com/v1/blocks/<page_id>/children`。
+6. 不要创建子页面、standalone page、database item 或 database row，除非用户明确改口要求。
+7. 如果官方 API 返回 `object_not_found` 或 `404`，优先判断为目标页面没有显式分享给当前 Integration；让用户在 Notion 页面 `Share -> Invite / Connections` 中添加对应 Integration。
+8. 只有当官方 API 路径不可用且用户接受时，才考虑 Notion connector/tools；不要因为 connector 只能创建页面就退而创建子页面。
+
+## API 调用约定
+
+写入时使用 `NOTION_TOKEN_WRITE`：
+
+```bash
+curl -sS -X PATCH "https://api.notion.com/v1/blocks/38f75a34-c926-807b-b1c5-c880e5c6a001/children" \
+  -H "Authorization: Bearer $NOTION_TOKEN_WRITE" \
+  -H "Content-Type: application/json" \
+  -H "Notion-Version: 2022-06-28" \
+  --data @payload.json
+```
+
+验证或读取页面内容时优先使用 `NOTION_TOKEN_READ`：
+
+```bash
+curl -sS "https://api.notion.com/v1/blocks/38f75a34-c926-807b-b1c5-c880e5c6a001/children?page_size=10" \
+  -H "Authorization: Bearer $NOTION_TOKEN_READ" \
+  -H "Notion-Version: 2022-06-28"
+```
+
+`payload.json` 应只包含追加 block，不包含 token。建议将 `## <论文标题>` 转为 `heading_2` block，将六个加粗 section 标签和正文转为 paragraph block；section 标签使用 rich text `annotations.bold: true`。
+
+需要用户先在 Notion 中完成：
+
+1. 创建 internal integration，例如 `Codex Notion Read` 和 `Codex Notion Write`。
+2. 给读写 integration 开启 `Read content`、`Insert content`、`Update content`。
+3. 在目标页面右上角 `Share -> Invite / Connections` 中显式添加对应 Integration。
+4. 在本机环境变量中配置 `NOTION_TOKEN_READ` 和 `NOTION_TOKEN_WRITE`，然后重启 Codex。
 
 ## 页面正文
 
